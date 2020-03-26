@@ -8,6 +8,22 @@
 #include <elapsedMillis.h>
 #include <Adafruit_NeoPixel.h>
 
+#include <FastLED.h>
+
+#define NUM_LEDS 25
+#define LED_PIN 27
+
+CRGB leds[NUM_LEDS];
+
+void setLeds(CRGB colour)
+{
+  for (int num = 0; num < NUM_LEDS; num++)
+  {
+    leds[num] = colour;
+  }
+  FastLED.show();
+}
+
 //---------------------------------------------------------------
 
 #include <BleKeyboard.h>
@@ -25,20 +41,20 @@ Button2 button(39);
 
 void onButtonPress(Button2 &btn)
 {
-  DEBUG("onPress");
   bleKeyboard.press(KEY_LEFT_CTRL);
   bleKeyboard.press('d');
   delay(100);
   bleKeyboard.releaseAll();
+  setLeds(CRGB::Green);
 }
 
 void onButtonRelease(Button2 &btn)
 {
-  DEBUG("onRelease");
   bleKeyboard.press(KEY_LEFT_CTRL);
   bleKeyboard.press('d');
   delay(100);
   bleKeyboard.releaseAll();
+  setLeds(CRGB::Red);
 }
 
 //---------------------------------------------------------------
@@ -51,6 +67,11 @@ void setup()
   button.setPressedHandler(onButtonPress);
   button.setReleasedHandler(onButtonRelease);
 
+  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
+
+  setLeds(CRGB::Blue);
+  FastLED.setBrightness(100);
+
   bleKeyboard.begin();
 }
 //---------------------------------------------------------------
@@ -62,10 +83,12 @@ void loop()
   if (!connected && bleKeyboard.isConnected())
   {
     connected = true;
+    setLeds(CRGB::Red);
     DEBUG("Connected!");
   }
   else if (connected && !bleKeyboard.isConnected())
   {
+    setLeds(CRGB::Blue);
     connected = false;
     DEBUG("Disconnected!");
   }
