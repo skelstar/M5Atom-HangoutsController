@@ -1,4 +1,3 @@
-
 #ifdef DEBUG_SERIAL
 #define DEBUG_OUT Serial
 #endif
@@ -6,88 +5,63 @@
 #include "Debug.hpp"
 
 #include <Arduino.h>
-#include <rom/rtc.h> // for reset reason
+#include <elapsedMillis.h>
+#include <Adafruit_NeoPixel.h>
+#include <Button2.h>
 
-#define SOFT_SPI_MOSI_PIN 21 // Blue
-#define SOFT_SPI_MISO_PIN 25 // Orange
-#define SOFT_SPI_SCK_PIN 33  // Yellow
+//---------------------------------------------------------------
 
-#define NRF_CE 22 // green
-#define NRF_CS 23 // white
+// #include <BleKeyboard.h>
 
-#include <NRF24L01Lib.h>
-#include <RF24Network.h>
+// // https://github.com/T-vK/ESP32-BLE-Keyboard
+// // https://www.arduino.cc/reference/en/language/functions/usb/keyboard/keyboardpress/
 
-NRF24L01Lib nrf24;
+// BleKeyboard bleKeyboard("M5Atom Hangouts Controller");
 
-RF24 radio(NRF_CE, NRF_CS);
-RF24Network network(radio);
+//---------------------------------------------------------------
 
-//-----------------------------------------
+Button2 button(39);
 
-// #include "M5Atom.h"
+void onButtonPress(Button2 &btn)
+{
+  DEBUG("onPress");
+  // bleKeyboard.press(KEY_LEFT_CTRL);
+  // bleKeyboard.press('d');
+  // delay(100);
+  // bleKeyboard.releaseAll();
+}
 
-// extern const unsigned char AtomImageData[375 + 2];
+void onButtonRelease(Button2 &btn)
+{
+  DEBUG("onRelease");
+  // bleKeyboard.press(KEY_LEFT_CTRL);
+  // bleKeyboard.press('d');
+  // delay(100);
+  // bleKeyboard.releaseAll();
+}
 
-// uint8_t DisBuff[2 + 5 * 5 * 3];
-
-// void setBuff(uint8_t Rdata, uint8_t Gdata, uint8_t Bdata)
-// {
-//   DisBuff[0] = 0x05;
-//   DisBuff[1] = 0x05;
-//   for (int i = 0; i < 25; i++)
-//   {
-//     DisBuff[2 + i * 3 + 0] = Rdata;
-//     DisBuff[2 + i * 3 + 1] = Gdata;
-//     DisBuff[2 + i * 3 + 2] = Bdata;
-//   }
-// }
+//---------------------------------------------------------------
 
 void setup()
 {
-  // M5.begin(true, false, true);
-  // delay(10);
-  // setBuff(0xff, 0x00, 0x00);
-  // M5.dis.displaybuff(DisBuff);
+  Serial.begin(115200);
+  Serial.printf("Ready");
 
-  DEBUG("Starting");
+  button.setPressedHandler(onButtonPress);
+  button.setReleasedHandler(onButtonRelease);
 
-  nrf24.begin(&radio, &network, 1, NULL);
+  // bleKeyboard.begin();
 }
-
-uint8_t FSM = 0;
+//---------------------------------------------------------------
 
 void loop()
 {
-  // if (M5.Btn.wasPressed())
+  // if (bleKeyboard.isConnected())
   // {
-
-  //   switch (FSM)
-  //   {
-  //   case 0:
-  //     setBuff(0xff, 0xff, 0xff);
-  //     break;
-  //   case 1:
-  //     setBuff(0x00, 0xff, 0x00);
-  //     break;
-  //   case 2:
-  //     setBuff(0x00, 0x00, 0xff);
-  //     break;
-  //   case 3:
-  //     setBuff(0xff, 0x00, 0x00);
-  //     break;
-  //   default:
-  //     break;
-  //   }
-  //   M5.dis.displaybuff(DisBuff);
-
-  //   FSM++;
-  //   if (FSM >= 4)
-  //   {
-  //     FSM = 0;
-  //   }
   // }
 
-  delay(50);
-  // M5.update();
+  button.loop();
+
+  vTaskDelay(10);
 }
+//------------------------------------------------------------------
