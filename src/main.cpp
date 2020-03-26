@@ -7,37 +7,38 @@
 #include <Arduino.h>
 #include <elapsedMillis.h>
 #include <Adafruit_NeoPixel.h>
-#include <Button2.h>
 
 //---------------------------------------------------------------
 
-// #include <BleKeyboard.h>
+#include <BleKeyboard.h>
 
 // // https://github.com/T-vK/ESP32-BLE-Keyboard
 // // https://www.arduino.cc/reference/en/language/functions/usb/keyboard/keyboardpress/
 
-// BleKeyboard bleKeyboard("M5Atom Hangouts Controller");
+BleKeyboard bleKeyboard("M5Atom Hangouts Ctrlr");
 
 //---------------------------------------------------------------
+
+#include <Button2.h>
 
 Button2 button(39);
 
 void onButtonPress(Button2 &btn)
 {
   DEBUG("onPress");
-  // bleKeyboard.press(KEY_LEFT_CTRL);
-  // bleKeyboard.press('d');
-  // delay(100);
-  // bleKeyboard.releaseAll();
+  bleKeyboard.press(KEY_LEFT_CTRL);
+  bleKeyboard.press('d');
+  delay(100);
+  bleKeyboard.releaseAll();
 }
 
 void onButtonRelease(Button2 &btn)
 {
   DEBUG("onRelease");
-  // bleKeyboard.press(KEY_LEFT_CTRL);
-  // bleKeyboard.press('d');
-  // delay(100);
-  // bleKeyboard.releaseAll();
+  bleKeyboard.press(KEY_LEFT_CTRL);
+  bleKeyboard.press('d');
+  delay(100);
+  bleKeyboard.releaseAll();
 }
 
 //---------------------------------------------------------------
@@ -50,17 +51,29 @@ void setup()
   button.setPressedHandler(onButtonPress);
   button.setReleasedHandler(onButtonRelease);
 
-  // bleKeyboard.begin();
+  bleKeyboard.begin();
 }
 //---------------------------------------------------------------
 
+bool connected = false;
+
 void loop()
 {
-  // if (bleKeyboard.isConnected())
-  // {
-  // }
+  if (!connected && bleKeyboard.isConnected())
+  {
+    connected = true;
+    DEBUG("Connected!");
+  }
+  else if (connected && !bleKeyboard.isConnected())
+  {
+    connected = false;
+    DEBUG("Disconnected!");
+  }
 
-  button.loop();
+  if (connected)
+  {
+    button.loop();
+  }
 
   vTaskDelay(10);
 }
