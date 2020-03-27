@@ -33,28 +33,42 @@ void setLeds(CRGB colour)
 
 BleKeyboard bleKeyboard("M5Atom Hangouts Ctrlr");
 
+void sendFindMeetingTab()
+{
+  bleKeyboard.press(KEY_LEFT_CTRL);
+  bleKeyboard.press(KEY_LEFT_SHIFT);
+  bleKeyboard.press('j');
+  delay(100);
+  bleKeyboard.releaseAll();
+}
+
+void sendMicHotKey()
+{
+  bleKeyboard.press(KEY_LEFT_CTRL);
+  bleKeyboard.press('d');
+  delay(100);
+  bleKeyboard.releaseAll();
+}
+
 //---------------------------------------------------------------
 
 #include <Button2.h>
 
 Button2 button(39);
 
+bool micOn = false;
+
 void onButtonPress(Button2 &btn)
 {
-  bleKeyboard.press(KEY_LEFT_CTRL);
-  bleKeyboard.press('d');
-  delay(100);
-  bleKeyboard.releaseAll();
-  setLeds(CRGB::Green);
 }
 
 void onButtonRelease(Button2 &btn)
 {
-  bleKeyboard.press(KEY_LEFT_CTRL);
-  bleKeyboard.press('d');
+  sendFindMeetingTab();
   delay(100);
-  bleKeyboard.releaseAll();
-  setLeds(CRGB::Red);
+  sendMicHotKey();
+  setLeds(micOn ? CRGB::Red : CRGB::Green);
+  micOn = !micOn;
 }
 
 //---------------------------------------------------------------
