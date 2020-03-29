@@ -153,7 +153,7 @@ FindInAnyFirefoxTab(TabToFind, ByRef ReturnFoundId)
 ;------------------------------------------------------------------
 
 ^+j::
-  FindInAnyFirefoxTab("Puzzle", CachedMantisWindowId)
+  FindInAnyFirefoxTab("Meet", CachedMantisWindowId)
   return
 
  
