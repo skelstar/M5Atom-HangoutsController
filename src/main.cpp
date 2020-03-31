@@ -84,7 +84,7 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
 
   setLeds(CRGB::Blue);
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(30);
 
   bleKeyboard.begin();
 }
