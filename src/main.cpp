@@ -54,15 +54,15 @@ void sendMicHotKey()
 
 #include <Button2.h>
 
+#define DOUBLECLICK_MS 300
+
 Button2 button(39);
 
 bool micOn = false;
 
-void onButtonPress(Button2 &btn)
-{
-}
+//---------------------------------------------------------------
 
-void onButtonRelease(Button2 &btn)
+void toggleMic(Button2 &btn)
 {
   sendFindMeetingTab();
   delay(100);
@@ -71,15 +71,26 @@ void onButtonRelease(Button2 &btn)
   micOn = !micOn;
 }
 
+void sendPlusOne(Button2 &btn)
+{
+  bleKeyboard.press(KEY_LEFT_CTRL);
+  bleKeyboard.press(KEY_LEFT_SHIFT);
+  bleKeyboard.press('k');
+  delay(100);
+  bleKeyboard.releaseAll();
+
+  DEBUG("+1 sent");
+}
+
 //---------------------------------------------------------------
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.printf("Ready");
+  DEBUG("Ready");
 
-  button.setPressedHandler(onButtonPress);
-  button.setReleasedHandler(onButtonRelease);
+  button.setClickHandler(toggleMic);
+  button.setDoubleClickHandler(sendPlusOne);
 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
 
@@ -107,10 +118,7 @@ void loop()
     DEBUG("Disconnected!");
   }
 
-  if (connected)
-  {
-    button.loop();
-  }
+  button.loop();
 
   vTaskDelay(10);
 }
