@@ -1,11 +1,11 @@
 ﻿
-/*
-- clicks on chat icon
-- waits for focus
-- sends "+1"
-- waits, then <enter>
-- waits then clicks out in main window
-*/
+;------------------------------------------------------------------
+
+FindTabInActiveFirefox(TabName, SleepForTabSwitch=400)
+{
+}
+
+;------------------------------------------------------------------
 
 ^+k::
   MouseClick, left, 1800, 100

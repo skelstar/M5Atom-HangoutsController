@@ -108,7 +108,7 @@ void loop()
   if (!connected && bleKeyboard.isConnected())
   {
     connected = true;
-    setLeds(CRGB::Red);
+    setLeds(CRGB::Green);
     DEBUG("Connected!");
   }
   else if (connected && !bleKeyboard.isConnected())
