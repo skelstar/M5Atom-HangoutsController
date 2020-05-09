@@ -51,6 +51,8 @@ void sendMicHotKey()
 }
 
 //---------------------------------------------------------------
+#define DOUBLECLICK_MS 300
+#define LONGCLICK_MS 700
 
 #include <Button2.h>
 
