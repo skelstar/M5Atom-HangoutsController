@@ -6,7 +6,8 @@
 
 #include <Arduino.h>
 #include <elapsedMillis.h>
-#include <Adafruit_NeoPixel.h>
+
+//--------------------------------------------
 
 #include <FastLED.h>
 
@@ -70,8 +71,6 @@ MPU6886 mpu;
 
 #include <Button2.h>
 
-#define DOUBLECLICK_MS 300
-
 Button2 button(39);
 
 bool micOn = false;
@@ -83,7 +82,7 @@ void toggleMic(Button2 &btn)
   sendFindMeetingTab();
   delay(100);
   sendMicHotKey();
-  setLeds(micOn ? CRGB::Red : CRGB::Green);
+  // setLeds(micOn ? CRGB::Red : CRGB::Green);
   micOn = !micOn;
 }
 
@@ -137,13 +136,14 @@ void setup()
   Serial.begin(115200);
   DEBUG("Ready");
 
-  button.setClickHandler(toggleMic);
+  // button.setReleasedHandler(toggleMic);
   button.setDoubleClickHandler(sendPlusOne);
+  button.setTapHandler(toggleMic);
 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
 
-  setLeds(CRGB::Blue);
   FastLED.setBrightness(30);
+  setLeds(CRGB::Blue);
 
   bleKeyboard.begin();
 
