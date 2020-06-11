@@ -44,6 +44,7 @@ BleKeyboard bleKeyboard("M5Atom Hangouts Ctrlr");
 
 void sendFindMeetingTab()
 {
+  // runs a service that is written nodejs
   bleKeyboard.press(KEY_LEFT_CTRL);
   bleKeyboard.press(KEY_LEFT_SHIFT);
   bleKeyboard.press('j');
@@ -56,6 +57,13 @@ void sendMicHotKey()
   bleKeyboard.press(KEY_LEFT_CTRL);
   bleKeyboard.press('d');
   delay(100);
+  bleKeyboard.releaseAll();
+}
+
+void sendEscapeKey()
+{
+  bleKeyboard.press(KEY_ESC);
+  delay(50);
   bleKeyboard.releaseAll();
 }
 
@@ -82,6 +90,9 @@ void toggleMic(Button2 &btn)
   sendFindMeetingTab();
   delay(100);
   sendMicHotKey();
+  delay(50);
+  sendEscapeKey();
+
   // setLeds(micOn ? CRGB::Red : CRGB::Green);
   micOn = !micOn;
 }
@@ -102,6 +113,10 @@ void sendWakeKey()
   bleKeyboard.press(KEY_LEFT_CTRL);
   delay(50);
   bleKeyboard.releaseAll();
+
+  delay(50);
+  sendEscapeKey();
+
   DEBUG("sent wake key");
 }
 
@@ -157,24 +172,15 @@ elapsedMillis sinceReadImu, sinceSentWakeKey;
 #define SECONDS 1000
 #define MINUTES SECONDS * 60
 #define SEND_WAKE_KEY_PERIOD 4 * MINUTES
-bool moved;
 
 void loop()
 {
-  if (sinceReadImu > READ_IMU_PERIOD && connected)
-  {
-    sinceReadImu = 0;
-
-    moved = moved || imuHasMoved();
-  }
-
-  if (moved && sinceSentWakeKey > SEND_WAKE_KEY_PERIOD)
+  if (sinceSentWakeKey > SEND_WAKE_KEY_PERIOD)
   {
     sinceSentWakeKey = 0;
-    if (moved && connected)
+    if (connected)
     {
       sendWakeKey();
-      moved = false;
     }
   }
 
