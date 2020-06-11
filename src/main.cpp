@@ -81,20 +81,17 @@ MPU6886 mpu;
 
 Button2 button(39);
 
-bool micOn = false;
-
 //---------------------------------------------------------------
 
 void toggleMic(Button2 &btn)
 {
   sendFindMeetingTab();
+
   delay(100);
   sendMicHotKey();
-  delay(50);
-  sendEscapeKey();
 
-  // setLeds(micOn ? CRGB::Red : CRGB::Green);
-  micOn = !micOn;
+  delay(100);
+  sendEscapeKey();
 }
 
 void sendPlusOne(Button2 &btn)
@@ -114,7 +111,7 @@ void sendWakeKey()
   delay(50);
   bleKeyboard.releaseAll();
 
-  delay(50);
+  delay(100);
   sendEscapeKey();
 
   DEBUG("sent wake key");
